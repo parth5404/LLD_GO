@@ -31,7 +31,7 @@ func (w *Warehouse) AddQuantity(sku string, quantity int) {
 	item.Increment(quantity)
 }
 
-func (w *Warehouse) removeProduct(sku string, quantity int) {
+func (w *Warehouse) RemoveProduct(sku string, quantity int) {
 	item, ok := w.products[sku]
 	if !ok {
 		fmt.Println("No product with this SKU")
@@ -41,4 +41,13 @@ func (w *Warehouse) removeProduct(sku string, quantity int) {
 	if item.GetQuantity() <= 0 {
 		delete(w.products, sku)
 	}
+}
+
+func (w *Warehouse) GetAvailableQuantity(sku string) int {
+	item, ok := w.products[sku]
+	if !ok {
+		fmt.Println("No product with this SKU")
+		return 0
+	}
+	return item.GetQuantity()
 }

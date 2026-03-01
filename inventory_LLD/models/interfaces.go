@@ -12,3 +12,13 @@ type InventoryItem interface {
 type ReplenishmentStrategy interface {
 	Replenish(product InventoryItem)
 }
+
+type Observer interface {
+	Update()
+}
+
+type Subject interface {
+	RegisterObserver(observer Observer)
+	RemoveObserver(observer Observer)
+	NotifyObservers()
+}
