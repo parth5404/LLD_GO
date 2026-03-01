@@ -8,3 +8,7 @@ type InventoryItem interface {
 	Increment(quantity int)
 	Decrement(quantity int)
 }
+
+type ReplenishmentStrategy interface {
+	Replenish(product InventoryItem)
+}
