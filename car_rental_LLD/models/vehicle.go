@@ -1,12 +1,13 @@
 package models
 
 type Vehicle struct {
-	licencePlate string
-	available    bool
-	model        string
-	company      string
-	ratePerDay   float64
-	vehicleType  VehicleType
+	licencePlate   string
+	available      bool
+	model          string
+	company        string
+	ratePerDay     float64
+	vehicleType    VehicleType
+	subVehicleType SubVehicleType
 }
 
 func NewVehicle(licencePlate string, available bool, model string,
@@ -34,4 +35,7 @@ func (vehicle *Vehicle) IsAvailable() bool {
 }
 func (vehicle *Vehicle) GetVehicleType() VehicleType {
 	return vehicle.vehicleType
+}
+func (vehicle *Vehicle) GetSubVehicleType() SubVehicleType {
+	return vehicle.subVehicleType
 }

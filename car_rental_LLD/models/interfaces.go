@@ -23,6 +23,7 @@ type IVehicle interface {
 	SetAvailability(status bool)
 	IsAvailable() bool
 	GetVehicleType() VehicleType
+	GetSubVehicleType() SubVehicleType
 }
 
 type IPaymentProcessor interface {
