@@ -27,5 +27,5 @@ type IVehicle interface {
 }
 
 type IPaymentProcessor interface {
-	Pay() bool
+	Pay(amount float64) bool
 }

@@ -10,14 +10,14 @@ const (
 
 type Reservations struct {
 	id       int
-	user     User
+	user     *User
 	startday int
 	endday   int
 	vehicle  IVehicle
 	status   ReservationStatus
 }
 
-func NewReservation(id int, user User, startday int, endday int, vehicle IVehicle,
+func NewReservation(id int, user *User, startday int, endday int, vehicle IVehicle,
 	status ReservationStatus) *Reservations {
 	return &Reservations{
 		id:       id,
@@ -27,6 +27,10 @@ func NewReservation(id int, user User, startday int, endday int, vehicle IVehicl
 		vehicle:  vehicle,
 		status:   status,
 	}
+}
+
+func (rs *Reservations) GetId() int {
+	return rs.id
 }
 
 func (rs *Reservations) calculatePayment() float64 {
