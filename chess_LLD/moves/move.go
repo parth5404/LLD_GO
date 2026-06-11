@@ -2,19 +2,22 @@ package moves
 
 import "lld/chess/models"
 
-type MoveFactory struct{}
-
 type Move interface {
 	CanMove(from models.Square, to models.Square, board *models.Board) bool
 }
 
-func NewMoveFactory() *MoveFactory {
-	return &MoveFactory{}
+type MoveFactory struct {
+	strategies map[models.MoveType]Move
 }
 
-func (m *MoveFactory) GetMoveStrategy(moveType models.MoveType) Move {
-	if moveType == models.Horizontal {
-		return NewHorizontalStrategy()
+func NewMoveFactory() *MoveFactory {
+	return &MoveFactory{
+		strategies: map[models.MoveType]Move{
+			models.Horizontal: &Horizontal{},
+		},
 	}
-	return nil
+}
+
+func (m *MoveFactory) GetMoveStrategy(mt models.MoveType) Move {
+	return m.strategies[mt]
 }
