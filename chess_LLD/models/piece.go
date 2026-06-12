@@ -1,7 +1,7 @@
 package models
 
 type Board struct {
-	Grid [8][8]Square // nil means empty square
+	Grid [8][8]Square
 }
 
 type Colour int
@@ -22,23 +22,8 @@ const (
 )
 
 type Piece interface {
-	ValidMove(b *Board, from *Square, to *Square) bool
+	ValidMove(b *Board, from *Square, to *Square, mod_piece []*Piece) bool
 	GetColorType() Colour
-}
-
-type Square struct {
-	Row, Col int
-	Piece    Piece
-}
-
-func NewSquare(row int, col int, pc Piece) *Square {
-	return &Square{
-		Row:   row,
-		Col:   col,
-		Piece: pc,
-	}
-}
-
-func (s *Square) GetPiece() Piece {
-	return s.Piece
+	GetType() string
+	GetMoveCnt() int
 }

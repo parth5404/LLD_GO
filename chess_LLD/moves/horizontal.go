@@ -8,7 +8,10 @@ func NewHorizontalStrategy() *Horizontal {
 	return &Horizontal{}
 }
 
-func (*Horizontal) CanMove(from models.Square, to models.Square, board *models.Board) bool {
+func (h *Horizontal) CanMove(from models.Square, to models.Square, board *models.Board, mod_piece []*models.Piece) bool {
+	if from == to {
+		return false
+	}
 	if from.Row != to.Row || to.Piece.GetColorType() == from.Piece.GetColorType() {
 		return false
 	}
