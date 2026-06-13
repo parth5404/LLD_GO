@@ -11,20 +11,20 @@ type castlingPiece struct {
 	moveCount int
 }
 
-func (p *castlingPiece) ValidMove(*models.Board, *models.Square, *models.Square, []*models.Piece) bool {
+func (tp *castlingPiece) ValidMove(*models.Board, *models.Square, *models.Square, []*models.Piece) bool {
 	return false
 }
 
-func (p *castlingPiece) GetColorType() models.Colour {
-	return p.color
+func (tp *castlingPiece) GetColorType() models.Colour {
+	return tp.color
 }
 
-func (p *castlingPiece) GetType() string {
-	return p.pieceType
+func (tp *castlingPiece) GetType() string {
+	return tp.pieceType
 }
 
-func (p *castlingPiece) GetMoveCnt() int {
-	return p.moveCount
+func (tp *castlingPiece) GetMoveCnt() int {
+	return tp.moveCount
 }
 
 func TestCastlingCanMoveKingSide(t *testing.T) {

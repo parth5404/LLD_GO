@@ -15,6 +15,7 @@ func NewMoveFactory() *MoveFactory {
 		strategies: map[models.MoveType]Move{
 			models.Horizontal: &Horizontal{},
 			models.Castling:   &Castling{},
+			models.Pawn:       &PawnMove{},
 		},
 	}
 }
