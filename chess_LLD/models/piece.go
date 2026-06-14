@@ -17,8 +17,10 @@ const (
 	LShaped MoveType = iota
 	Diagonal
 	Horizontal
+	Vertical
 	Castling
 	Pawn
+	King
 )
 
 type Piece interface {

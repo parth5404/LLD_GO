@@ -16,6 +16,9 @@ func NewMoveFactory() *MoveFactory {
 			models.Horizontal: &Horizontal{},
 			models.Castling:   &Castling{},
 			models.Pawn:       &PawnMove{},
+			models.LShaped:    &Lshape{},
+			models.Vertical:   &Vertical{},
+			models.Diagonal:   &Diagonal{},
 		},
 	}
 }
