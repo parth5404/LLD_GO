@@ -12,7 +12,7 @@ func (h *Horizontal) CanMove(from models.Square, to models.Square, board *models
 	if from == to {
 		return false
 	}
-	if from.Row != to.Row || to.Piece.GetColorType() == from.Piece.GetColorType() {
+	if from.Row != to.Row || to.Piece != nil && to.Piece.GetColorType() == from.Piece.GetColorType() {
 		return false
 	}
 	i := from.Col

@@ -19,6 +19,7 @@ func NewMoveFactory() *MoveFactory {
 			models.LShaped:    &Lshape{},
 			models.Vertical:   &Vertical{},
 			models.Diagonal:   &Diagonal{},
+			models.King:       &KingMove{},
 		},
 	}
 }

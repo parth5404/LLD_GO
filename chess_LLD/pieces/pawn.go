@@ -37,7 +37,7 @@ func (p *Pawn) GetColorType() models.Colour {
 }
 
 func (p *Pawn) GetType() string {
-	return "Pawn"
+	return "PAWN"
 }
 
 func (p *Pawn) GetMoveCnt() int {
