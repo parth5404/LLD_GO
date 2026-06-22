@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"lld/chess/models"
 	"lld/chess/pieces"
 )
@@ -203,4 +204,157 @@ func (g *Game) IsKingCheck(clr models.Colour, tempboard *models.Board) bool {
 		}
 	}
 	return false
+}
+
+func (g *Game) checkmateCheck(clr models.Colour) bool {
+	kingcheck := g.IsKingCheck(clr, nil)
+	if !kingcheck {
+		return false
+	}
+	grid := g.board.Grid
+	for i := 0; i < len(grid); i++ {
+		for j := 0; j < len(grid[i]); j++ {
+			if grid[i][j].Piece == nil {
+				continue
+			}
+			if grid[i][j].Piece.GetColorType() != clr {
+				continue
+			}
+			if g.checkviaTempBoard(&grid[i][j], clr) {
+				return false
+			}
+
+		}
+	}
+	return true
+}
+
+func (g *Game) checkviaTempBoard(from *models.Square, clr models.Colour) bool {
+	grid := g.board.Grid
+
+	for r := 0; r < 8; r++ {
+		for c := 0; c < 8; c++ {
+			to := grid[r][c]
+
+			if from.Piece.ValidMove(g.board, from, &to, nil) {
+				
+				tempboard := g.board.Clone()
+				
+				tempboard.Grid[r][c].Piece = from.Piece
+				tempboard.Grid[from.Row][from.Col].Piece = nil
+
+				if !g.IsKingCheck(clr, tempboard) {
+					return true
+				}
+			}
+		}
+	}
+	
+	
+	return false
+}
+
+func (g *Game) GetCurrentTurn() string {
+	if g.moveside == models.WHITE {
+		return "White"
+	}
+	return "Black"
+}
+
+func (g *Game) PrintBoard() {
+	fmt.Println("\n  a b c d e f g h")
+	for r := 0; r < 8; r++ {
+		fmt.Printf("%d ", 8-r)
+		for c := 0; c < 8; c++ {
+			p := g.board.Grid[r][c].Piece
+			if p == nil {
+				fmt.Print(". ")
+			} else {
+				char := "?"
+				switch p.GetType() {
+				case "PAWN":
+					char = "p"
+				case "ROOK":
+					char = "r"
+				case "KNIGHT":
+					char = "n"
+				case "BISHOP":
+					char = "b"
+				case "QUEEN":
+					char = "q"
+				case "KING":
+					char = "k"
+				}
+				if p.GetColorType() == models.WHITE {
+					// uppercase for white
+					char = string(char[0] - 32)
+				}
+				fmt.Print(char + " ")
+			}
+		}
+		fmt.Printf("%d\n", 8-r)
+	}
+	fmt.Println("  a b c d e f g h\n")
+}
+
+func parseCoord(s string) (int, int) {
+	if len(s) != 2 {
+		return -1, -1
+	}
+	c := int(s[0] - 'a')
+	r := 8 - int(s[1]-'0')
+	if r < 0 || r > 7 || c < 0 || c > 7 {
+		return -1, -1
+	}
+	return r, c
+}
+
+// PlayMoveStr takes standard coordinates like "e2" to "e4".
+func (g *Game) PlayMoveStr(fromStr, toStr string) bool {
+	r1, c1 := parseCoord(fromStr)
+	r2, c2 := parseCoord(toStr)
+
+	if r1 == -1 || r2 == -1 {
+		fmt.Println("Invalid coordinates. Use format 'e2'.")
+		return false
+	}
+
+	fromSq := g.board.Grid[r1][c1]
+	toSq := g.board.Grid[r2][c2]
+
+	if fromSq.Piece == nil {
+		fmt.Println("No piece at source square.")
+		return false
+	}
+
+	movemap := make(map[string][]models.Square)
+	
+	// Special Case: Castling detected if King moves 2 steps horizontally
+	if fromSq.Piece.GetType() == "KING" && (c2-c1 == 2 || c1-c2 == 2) {
+		// Find the rook
+		rRook := r1
+		cRookFrom := 7
+		cRookTo := 5
+		if c2 < c1 {
+			cRookFrom = 0
+			cRookTo = 3
+		}
+		
+		rookFromSq := g.board.Grid[rRook][cRookFrom]
+		rookToSq := g.board.Grid[rRook][cRookTo]
+		
+		if rookFromSq.Piece == nil || rookFromSq.Piece.GetType() != "ROOK" {
+			fmt.Println("Castling failed: Rook not found")
+			return false
+		}
+		
+		movemap["KING"] = []models.Square{fromSq, toSq}
+		movemap["ROOK"] = []models.Square{rookFromSq, rookToSq}
+		
+	} else {
+		// Normal move
+		movemap[fromSq.Piece.GetType()] = []models.Square{fromSq, toSq}
+	}
+
+	return g.MakeMove(movemap)
 }
