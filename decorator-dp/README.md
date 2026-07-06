@@ -1,6 +1,18 @@
-# Coffee Shop POS System - Low Level Design (LLD)
+# Starbrew Coffee - High-Concurrency POS System (LLD)
 
-This repository contains a modular, production-ready Point of Sale (POS) system for a Coffee Shop, built in Go. The architecture heavily leverages Object-Oriented Design (OOD) principles and multiple Gang of Four (GoF) design patterns to ensure the system is extensible, loosely coupled, and easy to test.
+**Project Name:** Starbrew POS (Point of Sale) Engine  
+**Language:** Go (Golang)  
+
+## Problem Statement
+Design a highly scalable, concurrent, and extensible Point of Sale (POS) system for a Coffee Shop. The system must fulfill the following technical requirements:
+1. **Dynamic Menu (Open-Closed Principle):** Support a base coffee (Espresso, Latte) with an infinite, dynamic combination of add-ons (Milk, Caramel, Vanilla) without suffering from class explosion.
+2. **Pluggable Payments:** Support multiple payment gateways (UPI, Credit Card, Wallet, COD) that can be swapped out or extended easily.
+3. **Event-Driven Orchestration:** Automatically notify downstream systems (Kitchen Display, Inventory System, Customer App) when an order state changes, without tightly coupling them to the core order processing logic.
+4. **Thread Safety & Concurrency:** Handle thousands of concurrent requests safely. Prevent critical business bugs like "Double Spending" (Idempotency failures) or "Time-Of-Check-To-Time-Of-Use" (TOCTOU) data races when multiple users/goroutines attempt to pay for or cancel the exact same order simultaneously.
+
+---
+
+This repository contains a modular, production-ready implementation solving the above problem statement. The architecture heavily leverages Object-Oriented Design (OOD) principles and multiple Gang of Four (GoF) design patterns to ensure the system is extensible, loosely coupled, and easy to test.
 
 ## System Architecture
 
