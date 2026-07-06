@@ -71,22 +71,48 @@ func (cf *CoffeeFactory) GetBaseCoffee(name string) (CoffeeItem, error) {
 	}
 }
 
-func (cf *CoffeeFactory) AddExtra(extraName string, base CoffeeItem) (CoffeeItem, error) {
-	if base == nil {
-		return nil, fmt.Errorf("base coffee cannot be nil")
+//	func (cf *CoffeeFactory) AddExtra(extraName string, base CoffeeItem) (CoffeeItem, error) {
+//		if base == nil {
+//			return nil, fmt.Errorf("base coffee cannot be nil")
+//		}
+//		switch extraName {
+//		case "MILK":
+//			return NewMilk(base), nil
+//		case "WHIPPED_CREAM":
+//			return NewWhippedCream(base), nil
+//		case "CHOCOLATE":
+//			return NewChocolate(base), nil
+//		case "CARAMEL":
+//			return NewCaramel(base), nil
+//		case "VANILLA_SYRUP":
+//			return NewVanillaSyrup(base), nil
+//		default:
+//			return base, fmt.Errorf("unknown extra: %s", extraName)
+//		}
+//	}
+func ApplyAddon(coffee CoffeeItem, addon string) (CoffeeItem, error) {
+	creator, err := GetAddon(addon)
+	if err != nil {
+		return nil, err
 	}
-	switch extraName {
-	case "MILK":
-		return NewMilk(base), nil
-	case "WHIPPED_CREAM":
-		return NewWhippedCream(base), nil
-	case "CHOCOLATE":
-		return NewChocolate(base), nil
-	case "CARAMEL":
-		return NewCaramel(base), nil
-	case "VANILLA_SYRUP":
-		return NewVanillaSyrup(base), nil
-	default:
-		return base, fmt.Errorf("unknown extra: %s", extraName)
-	}
+	return creator(coffee), nil
+}
+
+func init() {
+	RegisterAddon(
+		"milk",
+		func(c CoffeeItem) CoffeeItem {
+
+			return NewMilk(c)
+
+		},
+	)
+	RegisterAddon(
+		"caramel",
+		func(c CoffeeItem) CoffeeItem {
+
+			return NewCaramel(c)
+
+		},
+	)
 }

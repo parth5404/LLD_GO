@@ -1,34 +1,49 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	cfitemfactory := NewCoffeeFactory()
-	notifier := NewPublisher()
-	notifier.AddObserver(
+
+	publisher := NewPublisher()
+	publisher.AddObserver(
 		NewCustomer("Alice"),
 		NewKitchenDisplay("K1"),
 		NewInventorySystem(),
 	)
-	paymentfactory := NewPaymentFactory(notifier)
-	
+
+	paymentFactory := NewPaymentFactory()
+	orderService := NewOrderService(publisher, paymentFactory)
+
 	finalitem, err := cfitemfactory.GetBaseCoffee("LATTE")
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
 	}
-	
-	finalitem, err = cfitemfactory.AddExtra("MILK", finalitem)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
+	addons := []string{
+		"milk",
+		// "chocolate",
+		"caramel",
 	}
-	
-	paymentStrategy, err := paymentfactory.GetPaymentInterface("UPI")
-	if err != nil {
-		fmt.Println("Error:", err)
-		return
+
+	for _, addon := range addons {
+		modifier, err := GetAddon(addon)
+		if err != nil {
+			panic(err)
+		}
+		finalitem = modifier(finalitem)
 	}
-	
-	paymentStrategy.pay(finalitem)
+
+	// paymentStrategy, err := paymentfactory.GetPaymentInterface("UPI")
+	// if err != nil {
+	// 	fmt.Println("Error:", err)
+	// 	return
+	// }
+	// paymentStrategy.pay(finalitem)
+	order := orderService.CreateOrder(finalitem)
+	orderService.PayOrder("UPI", order)
+	time.Sleep(7 * time.Second)
 }
